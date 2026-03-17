@@ -45,9 +45,14 @@ async function createKeystore() {
     return new Promise((resolve, reject) => {
       const importProcess = spawn(
         "cast",
-        ["wallet", "import", keystoreName, "--private-key", privateKey],
+        ["wallet", "import", keystoreName, "--interactive"],
         {
           stdio: "inherit",
+          // Pass private key via environment variable to avoid exposure in
+          // process listings (ps aux). Environment variables are only readable
+          // via /proc/PID/environ which requires the same UID, unlike CLI
+          // arguments which are world-readable via /proc/PID/cmdline.
+          env: { ...process.env, PRIVATE_KEY: privateKey },
         }
       );
 
