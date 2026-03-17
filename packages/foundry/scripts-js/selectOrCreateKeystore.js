@@ -80,16 +80,14 @@ async function selectOrCreateKeystore() {
           "cast",
           ["wallet", "import", keystoreName, "--interactive"],
           {
-            stdio: ["pipe", "inherit", "inherit"],
+            stdio: "inherit",
+            // Pass private key via environment variable to avoid exposure in
+            // process listings (ps aux). Environment variables are only readable
+            // via /proc/PID/environ which requires the same UID, unlike CLI
+            // arguments which are world-readable via /proc/PID/cmdline.
+            env: { ...process.env, PRIVATE_KEY: privateKey },
           }
         );
-
-        // Pass private key via stdin to avoid exposure in process listing (ps aux).
-        // cast reads the private key from stdin when it is a pipe, then reads
-        // the keystore password from /dev/tty directly (via rpassword), so the
-        // user is still prompted interactively for their password.
-        importProcess.stdin.write(privateKey + "\n");
-        importProcess.stdin.end();
 
         importProcess.on("close", (code) => {
           if (code === 0) {
