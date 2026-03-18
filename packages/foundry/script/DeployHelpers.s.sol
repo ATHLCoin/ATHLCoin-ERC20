@@ -19,7 +19,6 @@ contract ScaffoldETHDeploy is Script {
 
     string root;
     string path;
-    Deployment[] public deployments;
     uint256 constant ANVIL_BASE_BALANCE = 10000 ether;
 
     /// @notice The deployer address for every run
@@ -62,13 +61,6 @@ contract ScaffoldETHDeploy is Script {
         path = string.concat(path, string.concat(chainIdStr, ".json"));
 
         string memory jsonWrite;
-
-        uint256 len = deployments.length;
-
-        for (uint256 i = 0; i < len; i++) {
-            vm.serializeString(jsonWrite, vm.toString(deployments[i].addr), deployments[i].name);
-        }
-
         string memory chainName;
 
         try vm.getChain(block.chainid) returns (Vm.Chain memory chain) {
