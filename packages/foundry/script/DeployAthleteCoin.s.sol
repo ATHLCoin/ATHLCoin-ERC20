@@ -40,9 +40,9 @@ contract DeployAthleteCoin is ScaffoldETHDeploy {
     // Vesting durations (in seconds)
     // -------------------------------------------------------------------------
     uint64 constant ONE_YEAR       = 365 days;
-    uint64 constant SIX_MONTHS     = 182 days;
-    uint64 constant THREE_YEARS    = 3 * uint64(365 days);
-    uint64 constant EIGHTEEN_MONTHS = 547 days; // 18 months ≈ 547 days
+    uint64 constant SIX_MONTHS     = ONE_YEAR / 2;
+    uint64 constant THREE_YEARS    = 3 * ONE_YEAR;
+    uint64 constant EIGHTEEN_MONTHS = 3 * SIX_MONTHS;
 
     function run() external ScaffoldEthDeployerRunner {
         // 1. Deploy AthleteCoin — entire 10B supply minted to the deployer.

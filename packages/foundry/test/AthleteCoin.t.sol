@@ -15,10 +15,10 @@ contract AthleteCoinTest is Test {
     uint256 constant INVESTOR_ALLOCATION = 1_500_000_000 * 10 ** 18;
     uint256 constant TREASURY_BALANCE    = TOTAL_SUPPLY - TEAM_ALLOCATION - INVESTOR_ALLOCATION;
 
-    uint64 constant ONE_YEAR        = 365 days;
-    uint64 constant SIX_MONTHS      = 182 days;
-    uint64 constant THREE_YEARS     = 3 * uint64(365 days);
-    uint64 constant EIGHTEEN_MONTHS = 547 days;
+    uint64 constant ONE_YEAR       = 365 days;
+    uint64 constant SIX_MONTHS     = ONE_YEAR / 2;
+    uint64 constant THREE_YEARS    = 3 * ONE_YEAR;
+    uint64 constant EIGHTEEN_MONTHS = 3 * SIX_MONTHS;
 
     // -------------------------------------------------------------------------
     // Actors
