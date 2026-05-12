@@ -51,9 +51,9 @@ contract DeployAthlCoin is ScaffoldETHDeploy {
     // Vesting durations (in seconds)
     // -------------------------------------------------------------------------
     uint64 constant ONE_YEAR       = 365 days;
-    uint64 constant SIX_MONTHS     = ONE_YEAR / 2;
+    uint64 constant SIX_MONTHS     = 183 days;
     uint64 constant THREE_YEARS    = 3 * ONE_YEAR;
-    uint64 constant EIGHTEEN_MONTHS = 3 * SIX_MONTHS;
+    uint64 constant EIGHTEEN_MONTHS = 548 days;
 
     // -------------------------------------------------------------------------
     // Team and Advisor beneficiaries — replace with real addresses before mainnet deployment

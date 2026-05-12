@@ -24,6 +24,7 @@ contract AthlCoin is ERC20, ERC20Permit {
      *                  Typically the deployer, which then distributes to vesting contracts.
      */
     constructor(address recipient) ERC20("AthlCoin", "ATHL") ERC20Permit("AthlCoin") {
+        require(recipient != address(0), "AthlCoin: recipient is zero address");
         _mint(recipient, TOTAL_SUPPLY);
     }
 }
