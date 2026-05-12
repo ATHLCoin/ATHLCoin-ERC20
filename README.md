@@ -1,8 +1,8 @@
 # 🪙 AthlCoin (ATHL)
 
-AthlCoin is the project's primary ERC-20 token for the Athlete ecosystem. It is implemented using OpenZeppelin contracts on top of a [Scaffold-ETH 2](https://scaffoldeth.io) (Foundry) monorepo.
+AthlCoin is the primary ERC-20 token for the Athlete ecosystem. It is implemented using OpenZeppelin contracts on top of a [Scaffold-ETH 2](https://scaffoldeth.io) (Foundry) monorepo.
 
-⚙️ Built using NextJS, RainbowKit, Foundry, Wagmi, Viem, and Typescript.
+⚙️ Built using NextJS, RainbowKit, Foundry, Wagmi, Viem, and TypeScript.
 
 ## Token properties
 
@@ -16,16 +16,21 @@ AthlCoin is the project's primary ERC-20 token for the Athlete ecosystem. It is 
 
 ## Token distribution
 
-| Recipient | Amount | Vesting schedule |
-|---|---|---|
-| Team | 2,000,000,000 ATHL (20%) | 1-year cliff, then linear over 3 years |
-| Investors | 1,500,000,000 ATHL (15%) | 6-month cliff, then linear over 18 months |
-| Treasury / Ecosystem | 6,500,000,000 ATHL (65%) | Held by deployer — no lock |
+| Recipient | Amount | % | Vesting schedule |
+|---|---|---|---|
+| Ecosystem | 3,650,000,000 ATHL | 36.5% | Immediate (no cliff or linear lock) |
+| Platform | 1,950,000,000 ATHL | 19.5% | Immediate (no cliff or linear lock) |
+| Team | 1,600,000,000 ATHL | 16% | 1-year cliff, then linear over 3 years |
+| Public Sale | 800,000,000 ATHL | 8% | Immediate (no cliff or linear lock) |
+| Advisors | 600,000,000 ATHL | 6% | 6-month cliff, then linear over 18 months |
+| Marketing | 500,000,000 ATHL | 5% | Immediate (no cliff or linear lock) |
+| Private Sale | 500,000,000 ATHL | 5% | Immediate (no cliff or linear lock) |
+| Seed | 400,000,000 ATHL | 4% | Immediate (no cliff or linear lock) |
 
-Vesting is managed by `AthlVestingWallet` — a custom multi-beneficiary, revocable vesting contract. Each group (Team, Investors) gets one pool contract. The treasury revoker can:
+Vesting is managed by `AthlVestingWallet` — a custom multi-beneficiary, revocable vesting contract. One pool contract is deployed per allocation group. The revoker (deployer, or a treasury multisig in production) can:
 
 - Register multiple beneficiaries with individual allocations via `addBeneficiary(address, uint256)`
-- Revoke a beneficiary's unvested tokens back to the treasury via `revoke(address)`
+- Revoke a beneficiary's unvested tokens back to the revoker via `revoke(address)`
 
 Beneficiaries claim their vested tokens independently by calling `release()` on their group's wallet.
 
@@ -33,20 +38,21 @@ Beneficiaries claim their vested tokens independently by calling `release()` on 
 
 | File | Purpose |
 |---|---|
-| `packages/foundry/contracts/AthlCoin.sol` | ERC-20 token — fixed 10B supply |
+| `packages/foundry/contracts/AthlCoin.sol` | ERC-20 token — fixed 10B supply with ERC-2612 permit |
 | `packages/foundry/contracts/AthlVestingWallet.sol` | Multi-beneficiary, revocable vesting contract |
-| `packages/foundry/script/DeployAthlCoin.s.sol` | Deploys token + two vesting wallets |
-| `packages/foundry/test/AthlCoin.t.sol` | Token tests |
+| `packages/foundry/script/DeployAthlCoin.s.sol` | Deploys token + all eight vesting wallets |
+| `packages/foundry/test/AthleteCoin.t.sol` | Token tests |
 | `packages/foundry/test/AthlVestingWallet.t.sol` | Vesting contract tests |
+| `audits/Security-Audit-2026-02-24.md` | Security audit (February 2026) |
 
 ## Deploy
 
 ```bash
-yarn deploy                                   # deploy all contracts
-yarn deploy --file DeployAthlCoin.s.sol    # deploy AthlCoin + vesting wallets only
+yarn deploy                                    # deploy all contracts
+yarn deploy --file DeployAthlCoin.s.sol        # deploy AthlCoin + vesting wallets only
 ```
 
-> **Before deploying to a live network**, call `addBeneficiary(address, amount)` on each vesting wallet for every team member / investor. Allocations must sum to the group's pool amount. Update the `revoker` address to a treasury multisig in `DeployAthlCoin.s.sol`.
+> **Before deploying to a live network**, call `addBeneficiary(address, amount)` on each vesting wallet for every beneficiary. Allocations must sum to the group's pool amount. Update the `revoker` address to a treasury multisig in `DeployAthlCoin.s.sol`.
 
 ## Requirements
 
@@ -58,7 +64,7 @@ Before you begin, you need to install the following tools:
 
 ## Quickstart
 
-1. Install dependencies if it was skipped in CLI:
+1. Install dependencies:
 
 ```bash
 cd athl-coin
@@ -77,21 +83,25 @@ yarn chain
 yarn deploy
 ```
 
-4. On a third terminal, start your NextJS app:
+4. On a third terminal, start the NextJS app:
 
 ```bash
 yarn start
 ```
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contracts using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+Visit the app on: `http://localhost:3000`. You can interact with your smart contracts using the `Debug Contracts` page. App config lives in `packages/nextjs/scaffold.config.ts`.
 
-**Note:** The pool addresses in `vestingPools.ts` are from the current local Anvil deployment. After running yarn deploy on a fresh chain, update them to match the new broadcast addresses.
+**Note:** Vesting wallet addresses in the frontend are derived from the current local Anvil deployment. After running `yarn deploy` on a fresh chain, update any hardcoded addresses to match the new broadcast addresses.
 
 ## Testing
 
 ```bash
-yarn foundry:test                                          # run all tests
-forge test --match-path test/AthlVestingWallet.t.sol -v   # vesting tests only
-forge test --match-path test/AthlCoin.t.sol -v         # token tests only
-forge test -vvv                                            # show traces on failure
+yarn foundry:test                                              # run all tests
+forge test --match-path test/AthlVestingWallet.t.sol -v       # vesting tests only
+forge test --match-path test/AthleteCoin.t.sol -v             # token tests only
+forge test -vvv                                                # show traces on failure
 ```
+
+## Security
+
+A security audit was performed in February 2026. See [`audits/Security-Audit-2026-02-24.md`](audits/Security-Audit-2026-02-24.md) for findings and remediation status.
