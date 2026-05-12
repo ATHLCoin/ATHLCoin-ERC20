@@ -1,6 +1,6 @@
-# 🪙 AthleteCoin (ATHL)
+# 🪙 AthlCoin (ATHL)
 
-AthleteCoin is the project's primary ERC-20 token for the Athlete ecosystem. It is implemented using OpenZeppelin contracts on top of a [Scaffold-ETH 2](https://scaffoldeth.io) (Foundry) monorepo.
+AthlCoin is the project's primary ERC-20 token for the Athlete ecosystem. It is implemented using OpenZeppelin contracts on top of a [Scaffold-ETH 2](https://scaffoldeth.io) (Foundry) monorepo.
 
 ⚙️ Built using NextJS, RainbowKit, Foundry, Wagmi, Viem, and Typescript.
 
@@ -8,7 +8,7 @@ AthleteCoin is the project's primary ERC-20 token for the Athlete ecosystem. It 
 
 | Property | Value |
 |---|---|
-| Name | AthleteCoin |
+| Name | AthlCoin |
 | Symbol | ATHL |
 | Total supply | 10,000,000,000 ATHL (fixed — no minting or burning) |
 | Decimals | 18 |
@@ -33,20 +33,20 @@ Beneficiaries claim their vested tokens independently by calling `release()` on 
 
 | File | Purpose |
 |---|---|
-| `packages/foundry/contracts/AthleteCoin.sol` | ERC-20 token — fixed 10B supply |
+| `packages/foundry/contracts/AthlCoin.sol` | ERC-20 token — fixed 10B supply |
 | `packages/foundry/contracts/AthlVestingWallet.sol` | Multi-beneficiary, revocable vesting contract |
-| `packages/foundry/script/DeployAthleteCoin.s.sol` | Deploys token + two vesting wallets |
-| `packages/foundry/test/AthleteCoin.t.sol` | Token tests |
+| `packages/foundry/script/DeployAthlCoin.s.sol` | Deploys token + two vesting wallets |
+| `packages/foundry/test/AthlCoin.t.sol` | Token tests |
 | `packages/foundry/test/AthlVestingWallet.t.sol` | Vesting contract tests |
 
 ## Deploy
 
 ```bash
 yarn deploy                                   # deploy all contracts
-yarn deploy --file DeployAthleteCoin.s.sol    # deploy AthleteCoin + vesting wallets only
+yarn deploy --file DeployAthlCoin.s.sol    # deploy AthlCoin + vesting wallets only
 ```
 
-> **Before deploying to a live network**, call `addBeneficiary(address, amount)` on each vesting wallet for every team member / investor. Allocations must sum to the group's pool amount. Update the `revoker` address to a treasury multisig in `DeployAthleteCoin.s.sol`.
+> **Before deploying to a live network**, call `addBeneficiary(address, amount)` on each vesting wallet for every team member / investor. Allocations must sum to the group's pool amount. Update the `revoker` address to a treasury multisig in `DeployAthlCoin.s.sol`.
 
 ## Requirements
 
@@ -90,6 +90,6 @@ Visit your app on: `http://localhost:3000`. You can interact with your smart con
 ```bash
 yarn foundry:test                                          # run all tests
 forge test --match-path test/AthlVestingWallet.t.sol -v   # vesting tests only
-forge test --match-path test/AthleteCoin.t.sol -v         # token tests only
+forge test --match-path test/AthlCoin.t.sol -v         # token tests only
 forge test -vvv                                            # show traces on failure
 ```

@@ -2,11 +2,11 @@
 pragma solidity ^0.8.28;
 
 import { Test } from "forge-std/Test.sol";
-import { AthleteCoin } from "../contracts/AthleteCoin.sol";
+import { AthlCoin } from "../contracts/AthlCoin.sol";
 import { AthlVestingWallet } from "../contracts/AthlVestingWallet.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 
-contract AthleteCoinTest is Test {
+contract AthlCoinTest is Test {
     // -------------------------------------------------------------------------
     // Constants mirrored from the contract / deploy script
     // -------------------------------------------------------------------------
@@ -32,7 +32,7 @@ contract AthleteCoinTest is Test {
     // -------------------------------------------------------------------------
     // Contracts under test
     // -------------------------------------------------------------------------
-    AthleteCoin athl;
+    AthlCoin athl;
     AthlVestingWallet teamVesting;
     AthlVestingWallet investorVesting;
 
@@ -44,7 +44,7 @@ contract AthleteCoinTest is Test {
         vm.startPrank(deployer);
 
         // Deploy token — all 10B to deployer
-        athl = new AthleteCoin(deployer);
+        athl = new AthlCoin(deployer);
 
         // Team vesting: 1-year cliff + 3-year linear
         teamVesting = new AthlVestingWallet(
@@ -68,7 +68,7 @@ contract AthleteCoinTest is Test {
     // =========================================================================
 
     function test_Name() public view {
-        assertEq(athl.name(), "AthleteCoin");
+        assertEq(athl.name(), "AthlCoin");
     }
 
     function test_Symbol() public view {
@@ -103,7 +103,7 @@ contract AthleteCoinTest is Test {
 
     function test_DeployerReceivesFullSupplyInitially() public {
         // Before setUp transfers, a freshly minted token gives all to recipient
-        AthleteCoin fresh = new AthleteCoin(alice);
+        AthlCoin fresh = new AthlCoin(alice);
         assertEq(fresh.balanceOf(alice), TOTAL_SUPPLY);
     }
 
@@ -131,7 +131,7 @@ contract AthleteCoinTest is Test {
     // =========================================================================
 
     function test_RevertWhen_MintCalledDirectly() public {
-        // AthleteCoin exposes no public mint function — calling a non-existent
+        // AthlCoin exposes no public mint function — calling a non-existent
         // selector should revert.
         (bool success,) = address(athl).call(
             abi.encodeWithSignature("mint(address,uint256)", alice, 1 ether)

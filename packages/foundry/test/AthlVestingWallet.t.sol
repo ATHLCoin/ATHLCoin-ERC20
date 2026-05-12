@@ -2,7 +2,7 @@
 pragma solidity ^0.8.28;
 
 import { Test } from "forge-std/Test.sol";
-import { AthleteCoin } from "../contracts/AthleteCoin.sol";
+import { AthlCoin } from "../contracts/AthlCoin.sol";
 import { AthlVestingWallet } from "../contracts/AthlVestingWallet.sol";
 
 contract AthlVestingWalletTest is Test {
@@ -27,7 +27,7 @@ contract AthlVestingWalletTest is Test {
     // -------------------------------------------------------------------------
     // Contracts under test
     // -------------------------------------------------------------------------
-    AthleteCoin token;
+    AthlCoin token;
     AthlVestingWallet wallet;
 
     uint64 deployTime;
@@ -36,7 +36,7 @@ contract AthlVestingWalletTest is Test {
         deployTime = uint64(block.timestamp);
 
         // Deploy token, fund revoker
-        token = new AthleteCoin(revoker);
+        token = new AthlCoin(revoker);
 
         // Deploy wallet with 1-year cliff + 3-year linear schedule
         vm.startPrank(revoker);

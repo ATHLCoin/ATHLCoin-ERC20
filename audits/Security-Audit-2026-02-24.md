@@ -1,4 +1,4 @@
-# Security Audit Report — AthleteCoin / AthlVestingWallet
+# Security Audit Report — AthlCoin / AthlVestingWallet
 
 ---
 
@@ -83,7 +83,7 @@ Both vesting wallets use the deployer EOA as `revoker`, and 6.5 B ATHL (65% of t
 - Ability to `revoke` all beneficiaries and drain unvested tokens back to the revoker.
 - Immediate access to 6.5 B ATHL.
 
-The DeployAthleteCoin.s.sol file documents this as a TODO, but it is worth treating as a blocking pre-mainnet item. **Replace the deployer EOA with a Gnosis Safe multisig** for the revoker role. Consider a timelocked treasury contract for the 6.5 B.
+The DeployAthlCoin.s.sol file documents this as a TODO, but it is worth treating as a blocking pre-mainnet item. **Replace the deployer EOA with a Gnosis Safe multisig** for the revoker role. Consider a timelocked treasury contract for the 6.5 B.
 
 ---
 
@@ -107,8 +107,8 @@ bytes memory constructorArgs = BytesLib.slice(
 
 | File | Pragma |
 |---|---|
-| AthleteCoin.sol / AthlVestingWallet.sol | `>=0.8.20 <0.9.0` |
-| DeployAthleteCoin.s.sol | `^0.8.20` |
+| AthlCoin.sol / AthlVestingWallet.sol | `>=0.8.20 <0.9.0` |
+| DeployAthlCoin.s.sol | `^0.8.20` |
 | Deploy.s.sol / DeployHelpers.s.sol / VerifyAll.s.sol | `^0.8.19` |
 
 Scripts compiled with `^0.8.19` could theoretically use a different patch version than the contracts. Pin all files to the same version (e.g. `0.8.28`) to guarantee identical compiler behaviour.
@@ -178,7 +178,7 @@ The keystore name comes from `readdirSync(~/.foundry/keystores)`. A filename wit
 
 ---
 
-#### I-5 · `AthleteCoin` constructor does not guard against `address(0)` recipient
+#### I-5 · `AthlCoin` constructor does not guard against `address(0)` recipient
 
 OZ's `_mint` will revert on `address(0)`, so this is not exploitable, but an explicit `require(recipient != address(0))` at the top of the constructor makes the failure mode clearer and the NatSpec honest.
 
@@ -192,16 +192,16 @@ OZ's `_mint` will revert on `address(0)`, so this is not exploitable, but an exp
 | H-2 | 🔴 High | checkAccountBalance.js | Hardcoded Alchemy API key in source |
 | M-1 | 🟡 Medium | AthlVestingWallet.sol | `duration = 0` gives immediate full vesting |
 | M-2 | 🟡 Medium | generateKeystore.js, selectOrCreateKeystore.js | Private key exposed in process args |
-| M-3 | 🟡 Medium | DeployAthleteCoin.s.sol | EOA deployer controls revoker role & treasury |
+| M-3 | 🟡 Medium | DeployAthlCoin.s.sol | EOA deployer controls revoker role & treasury |
 | M-4 | 🟡 Medium | VerifyAll.s.sol | Immutable bytecode breaks constructor arg extraction |
 | L-1 | 🔵 Low | All scripts | Pragma version inconsistency |
-| L-2 | 🔵 Low | DeployAthleteCoin.s.sol | `SIX_MONTHS`/`EIGHTEEN_MONTHS` imprecise |
+| L-2 | 🔵 Low | DeployAthlCoin.s.sol | `SIX_MONTHS`/`EIGHTEEN_MONTHS` imprecise |
 | L-3 | 🔵 Low | DeployHelpers.s.sol | `deployments` array never populated (dead code) |
 | L-4 | 🔵 Low | generateTsAbis.js | `format()` missing `await` breaks Prettier v3 |
 | I-1 | ℹ️ Info | AthlVestingWallet.sol | No beneficiary address migration |
 | I-2 | ℹ️ Info | AthlVestingWallet.sol | No total-allocation accounting |
 | I-3 | ℹ️ Info | checkAccountBalance.js | `execSync` with unsanitized keystore name |
 | I-4 | ℹ️ Info | AthlVestingWallet.sol | CEI pattern correctly followed ✅ |
-| I-5 | ℹ️ Info | AthleteCoin.sol | No explicit `address(0)` guard for `recipient` |
+| I-5 | ℹ️ Info | AthlCoin.sol | No explicit `address(0)` guard for `recipient` |
 
 Would you like me to apply any of the fixes directly?

@@ -14,17 +14,17 @@ const ERC20: NextPage = () => {
   const [amount, setAmount] = useState<string>("");
 
   const { data: balance } = useScaffoldReadContract({
-    contractName: "AthleteCoin",
+    contractName: "AthlCoin",
     functionName: "balanceOf",
     args: [connectedAddress],
   });
 
   const { data: totalSupply } = useScaffoldReadContract({
-    contractName: "AthleteCoin",
+    contractName: "AthlCoin",
     functionName: "totalSupply",
   });
 
-  const { writeContractAsync: writeAthleteCoinAsync } = useScaffoldWriteContract("AthleteCoin");
+  const { writeContractAsync: writeAthlCoinAsync } = useScaffoldWriteContract("AthlCoin");
 
   return (
     <>
@@ -123,7 +123,7 @@ const ERC20: NextPage = () => {
                 disabled={!toAddress || !amount}
                 onClick={async () => {
                   try {
-                    await writeAthleteCoinAsync({ functionName: "transfer", args: [toAddress, parseEther(amount)] });
+                    await writeAthlCoinAsync({ functionName: "transfer", args: [toAddress, parseEther(amount)] });
                     setToAddress("");
                     setAmount("");
                   } catch (e) {

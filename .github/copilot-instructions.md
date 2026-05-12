@@ -2,14 +2,14 @@
 
 ## Project Overview
 
-**AthleteCoin (ATHL)** — a Scaffold-ETH 2 (Foundry flavor) monorepo implementing a fixed-supply ERC-20 token with multi-beneficiary revocable vesting. Two packages:
+**AthlCoin (ATHL)** — a Scaffold-ETH 2 (Foundry flavor) monorepo implementing a fixed-supply ERC-20 token with multi-beneficiary revocable vesting. Two packages:
 
 - `packages/foundry` — Solidity contracts, deploy scripts, tests (Forge/Anvil)
 - `packages/nextjs` — React frontend (Next.js App Router, RainbowKit, Wagmi, Viem, DaisyUI)
 
 ## Core Contracts
 
-### `AthleteCoin` (`contracts/AthleteCoin.sol`)
+### `AthlCoin` (`contracts/AthlCoin.sol`)
 Fixed-supply ERC-20 (ERC-2612 permit). 10B ATHL minted once to `recipient` at construction — no further minting or burning. Token distribution is handled via vesting wallets or direct transfer by the deployer.
 
 ### `AthlVestingWallet` (`contracts/AthlVestingWallet.sol`)
@@ -19,14 +19,14 @@ Multi-beneficiary, revocable linear vesting pool. One instance per allocation gr
 - `revoke(beneficiary)` preserves vested-to-date; returns unvested tokens to `revoker`
 - Cliff is implemented by setting `start = deployTime + cliffPeriod`
 
-### Token Allocation (from `script/DeployAthleteCoin.s.sol`)
+### Token Allocation (from `script/DeployAthlCoin.s.sol`)
 | Recipient | Amount | Schedule |
 |---|---|---|
 | Team vesting | 2B ATHL | 1-year cliff + 3-year linear |
 | Investor vesting | 1.5B ATHL | 6-month cliff + 18-month linear |
 | Deployer (treasury) | 6.5B ATHL | No lock |
 
-> **Production TODOs in `DeployAthleteCoin.s.sol`:** Replace `deployer` with a treasury multisig as `revoker`, and replace the placeholder `addBeneficiary(deployer, ...)` calls with real beneficiary addresses.
+> **Production TODOs in `DeployAthlCoin.s.sol`:** Replace `deployer` with a treasury multisig as `revoker`, and replace the placeholder `addBeneficiary(deployer, ...)` calls with real beneficiary addresses.
 
 ## Dev Workflow
 
@@ -63,17 +63,17 @@ contract DeployMyContract is ScaffoldETHDeploy {
 
 ```tsx
 const { data: balance } = useScaffoldReadContract({
-  contractName: "AthleteCoin",
+  contractName: "AthlCoin",
   functionName: "balanceOf",
   args: [connectedAddress],
 });
 
-const { writeContractAsync } = useScaffoldWriteContract("AthleteCoin");
+const { writeContractAsync } = useScaffoldWriteContract("AthlCoin");
 ```
 
 Available hooks: `useScaffoldReadContract`, `useScaffoldWriteContract`, `useScaffoldEventHistory`, `useScaffoldWatchContractEvent`, `useScaffoldContract`, `useDeployedContractInfo`, `useTransactor`.
 
-See `packages/nextjs/app/erc20/page.tsx` as a reference implementation (note: still uses the `SE2Token` name — update to `AthleteCoin` when building new pages).
+See `packages/nextjs/app/erc20/page.tsx` as a reference implementation (note: still uses the `SE2Token` name — update to `AthlCoin` when building new pages).
 
 ## UI Components & Styling
 
@@ -117,9 +117,9 @@ Use the **`grumpy-carlos-code-reviewer`** specialized agent for code reviews bef
 
 | File | Purpose |
 |---|---|
-| `packages/foundry/contracts/AthleteCoin.sol` | Fixed-supply ERC-20 (ATHL) with ERC-2612 permit |
+| `packages/foundry/contracts/AthlCoin.sol` | Fixed-supply ERC-20 (ATHL) with ERC-2612 permit |
 | `packages/foundry/contracts/AthlVestingWallet.sol` | Multi-beneficiary revocable vesting pool |
-| `packages/foundry/script/DeployAthleteCoin.s.sol` | Full deployment: token + team/investor vesting wallets |
+| `packages/foundry/script/DeployAthlCoin.s.sol` | Full deployment: token + team/investor vesting wallets |
 | `packages/foundry/script/Deploy.s.sol` | Entry point orchestrating all deployments |
 | `packages/foundry/script/DeployHelpers.s.sol` | `ScaffoldETHDeploy` base + `ScaffoldEthDeployerRunner` modifier |
 | `packages/nextjs/contracts/deployedContracts.ts` | Auto-generated ABIs — do not edit |

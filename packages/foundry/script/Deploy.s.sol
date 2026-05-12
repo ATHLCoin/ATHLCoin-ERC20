@@ -2,7 +2,7 @@
 pragma solidity ^0.8.28;
 
 import { ScaffoldETHDeploy } from "./DeployHelpers.s.sol";
-import { DeployAthleteCoin } from "./DeployAthleteCoin.s.sol";
+import { DeployAthlCoin } from "./DeployAthlCoin.s.sol";
 
 /**
  * @notice Main deployment script for all contracts
@@ -15,8 +15,8 @@ contract DeployScript is ScaffoldETHDeploy {
         // Deploys all your contracts sequentially
         // Add new deployments here when needed
 
-        DeployAthleteCoin deployAthleteCoin = new DeployAthleteCoin();
-        deployAthleteCoin.run();
+        DeployAthlCoin deployAthlCoin = new DeployAthlCoin();
+        deployAthlCoin.run();
 
         // Deploy another contract
         // DeployMyContract myContract = new DeployMyContract();

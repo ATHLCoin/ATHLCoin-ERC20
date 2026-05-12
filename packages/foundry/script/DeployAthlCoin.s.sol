@@ -2,13 +2,13 @@
 pragma solidity ^0.8.28;
 
 import { console } from "forge-std/Script.sol";
-import "../contracts/AthleteCoin.sol";
+import "../contracts/AthlCoin.sol";
 import "../contracts/AthlVestingWallet.sol";
 import "./DeployHelpers.s.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 /**
- * @notice Deploys AthleteCoin and sets up VestingWallet contracts for team and investor
+ * @notice Deploys AthlCoin and sets up VestingWallet contracts for team and investor
  *         token distributions.
  *
  * Token allocation (10,000,000,000 ATHL total):
@@ -33,8 +33,8 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
  * Before deploying to a live network, replace the TEAM_BENEFICIARY and
  * INVESTOR_BENEFICIARY constants below with the real recipient addresses.
  */
-contract DeployAthleteCoin is ScaffoldETHDeploy {
-    using SafeERC20 for AthleteCoin;
+contract DeployAthlCoin is ScaffoldETHDeploy {
+    using SafeERC20 for AthlCoin;
     // -------------------------------------------------------------------------
     // Allocations (in ATHL base units, 18 decimals)
     // -------------------------------------------------------------------------
@@ -65,9 +65,9 @@ contract DeployAthleteCoin is ScaffoldETHDeploy {
     // For local testing the deployer is used as a placeholder (set at runtime below).
 
     function run() external ScaffoldEthDeployerRunner {
-        // 1. Deploy AthleteCoin — entire 10B supply minted to the deployer.
-        AthleteCoin athl = new AthleteCoin(deployer);
-        console.logString(string.concat("AthleteCoin deployed at:", vm.toString(address(athl))));
+        // 1. Deploy AthlCoin — entire 10B supply minted to the deployer.
+        AthlCoin athl = new AthlCoin(deployer);
+        console.logString(string.concat("AthlCoin deployed at:", vm.toString(address(athl))));
 
         uint64 deployTime = uint64(block.timestamp);
 
