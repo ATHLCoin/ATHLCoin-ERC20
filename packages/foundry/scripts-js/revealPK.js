@@ -1,5 +1,5 @@
 import { listKeystores } from "./listKeystores.js";
-import { execSync } from "child_process";
+import { spawnSync } from "child_process";
 
 async function revealPk() {
   try {
@@ -15,11 +15,16 @@ async function revealPk() {
     }
 
     try {
-      const revealPKCommand = `cast wallet decrypt-keystore ${selectedKeystore}`;
-
-      const revealPKResult = execSync(revealPKCommand).toString().trim();
-
-      console.log(`\n🔑 ${revealPKResult}`);
+      const result = spawnSync(
+        "cast",
+        ["wallet", "decrypt-keystore", selectedKeystore],
+        { stdio: "inherit" }
+      );
+      if (result.error) throw result.error;
+      if (result.status !== 0) {
+        console.error("\n❌ Failed to decrypt keystore. Wrong password?");
+        process.exit(1);
+      }
     } catch (error) {
       console.error("\n❌ Failed to decrypt keystore. Wrong password?");
       process.exit(1);
