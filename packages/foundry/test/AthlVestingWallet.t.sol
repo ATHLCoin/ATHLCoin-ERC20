@@ -97,6 +97,10 @@ contract AthlVestingWalletTest is Test {
 
     function test_AddBeneficiary_EmitsEvent() public {
         address newMember = makeAddr("newMember");
+        // Fund the wallet with extra tokens so the InsufficientFunds guard passes.
+        vm.prank(revoker);
+        token.transfer(address(wallet), 100 ether);
+
         vm.expectEmit(true, false, false, true);
         emit AthlVestingWallet.BeneficiaryAdded(newMember, 100 ether);
         vm.prank(revoker);

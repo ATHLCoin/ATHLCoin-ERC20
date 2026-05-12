@@ -46,6 +46,7 @@ contract AthlVestingWallet {
     event BeneficiaryAdded(address indexed beneficiary, uint256 allocation);
     event TokensReleased(address indexed beneficiary, uint256 amount);
     event BeneficiaryRevoked(address indexed beneficiary, uint256 vestedAmount, uint256 unvestedAmount);
+    event BeneficiaryChanged(address indexed oldBeneficiary, address indexed newBeneficiary);
 
     // -------------------------------------------------------------------------
     // Errors
@@ -58,6 +59,7 @@ contract AthlVestingWallet {
     error NotABeneficiary(address beneficiary);
     error AlreadyRevoked(address beneficiary);
     error NothingToRelease();
+    error InsufficientFunds(uint256 totalAllocated, uint256 balance);
 
     // -------------------------------------------------------------------------
     // Structs
@@ -86,6 +88,10 @@ contract AthlVestingWallet {
     /// @notice Duration of the linear vesting window in seconds.
     uint64 public immutable duration;
 
+    /// @notice Sum of all active beneficiary allocations.
+    ///         Used to guard against over-allocation relative to the funded balance.
+    uint256 public totalAllocated;
+
     mapping(address => BeneficiaryInfo) private _beneficiaries;
 
     // -------------------------------------------------------------------------
@@ -96,11 +102,11 @@ contract AthlVestingWallet {
      * @param _token    The ATHL token contract address.
      * @param _revoker  Address that can add/revoke beneficiaries (treasury multisig).
      * @param _start    Unix timestamp at which vesting begins (deploy time + cliff).
-     * @param _duration Seconds over which tokens vest linearly after `_start`.
-     *                  Pass 0 for allocations that are fully claimable at `_start` (no linear vesting).
+     * @param _duration Seconds over which tokens vest linearly after `_start`. Must be > 0.
      */
     constructor(address _token, address _revoker, uint64 _start, uint64 _duration) {
         if (_token == address(0) || _revoker == address(0)) revert ZeroAddress();
+        if (_duration == 0) revert ZeroDuration();
         token = IERC20(_token);
         revoker = _revoker;
         start = _start;
@@ -113,8 +119,7 @@ contract AthlVestingWallet {
 
     /**
      * @notice Register a beneficiary with a specific token allocation.
-     * @dev The contract must already hold at least the cumulative sum of all
-     *      allocations for transfers to succeed at claim time.
+     * @dev Reverts if total allocations would exceed the contract's current token balance.
      * @param beneficiary Recipient address.
      * @param allocation  Total tokens (in base units) assigned to this beneficiary.
      */
@@ -123,6 +128,11 @@ contract AthlVestingWallet {
         if (beneficiary == address(0)) revert ZeroAddress();
         if (allocation == 0) revert ZeroAllocation();
         if (_beneficiaries[beneficiary].allocation != 0) revert AlreadyAdded(beneficiary);
+
+        uint256 newTotal = totalAllocated + allocation;
+        if (newTotal > token.balanceOf(address(this))) revert InsufficientFunds(newTotal, token.balanceOf(address(this)));
+
+        totalAllocated = newTotal;
         _beneficiaries[beneficiary].allocation = allocation;
         emit BeneficiaryAdded(beneficiary, allocation);
     }
@@ -143,6 +153,9 @@ contract AthlVestingWallet {
 
         info.revoked = true;
         info.vestedAtRevoke = vested;
+
+        // Reduce totalAllocated by the unvested portion being returned to revoker.
+        totalAllocated -= unvested;
 
         emit BeneficiaryRevoked(beneficiary, vested, unvested);
 
@@ -167,6 +180,29 @@ contract AthlVestingWallet {
         _beneficiaries[beneficiary].released += amount;
         emit TokensReleased(beneficiary, amount);
         token.safeTransfer(beneficiary, amount);
+    }
+
+    // -------------------------------------------------------------------------
+    // Revoker-only beneficiary management (continued)
+    // -------------------------------------------------------------------------
+
+    /**
+     * @notice Redirects a beneficiary's allocation to a new address.
+     * @dev Only callable by the revoker (e.g. treasury multisig) to handle key-loss recovery.
+     *      The new address must not already be a beneficiary. All vesting state is migrated.
+     * @param oldBeneficiary The current beneficiary address.
+     * @param newBeneficiary The replacement address.
+     */
+    function changeBeneficiary(address oldBeneficiary, address newBeneficiary) external {
+        if (msg.sender != revoker) revert NotRevoker();
+        if (newBeneficiary == address(0)) revert ZeroAddress();
+        if (_beneficiaries[oldBeneficiary].allocation == 0) revert NotABeneficiary(oldBeneficiary);
+        if (_beneficiaries[newBeneficiary].allocation != 0) revert AlreadyAdded(newBeneficiary);
+
+        _beneficiaries[newBeneficiary] = _beneficiaries[oldBeneficiary];
+        delete _beneficiaries[oldBeneficiary];
+
+        emit BeneficiaryChanged(oldBeneficiary, newBeneficiary);
     }
 
     // -------------------------------------------------------------------------

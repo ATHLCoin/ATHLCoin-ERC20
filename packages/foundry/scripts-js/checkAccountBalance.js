@@ -86,9 +86,12 @@ async function checkAccountBalance() {
         ["wallet", "address", "--account", selectedKeystore],
         { encoding: "utf8" }
       );
+
       if (result.error) throw result.error;
+
       if (result.status !== 0)
         throw new Error(result.stderr || "cast wallet address failed");
+
       address = result.stdout.trim();
       console.log("\n💰 Checking balances across networks...");
       console.log("\n");
