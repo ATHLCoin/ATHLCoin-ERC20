@@ -85,6 +85,8 @@ yarn start
 
 Visit your app on: `http://localhost:3000`. You can interact with your smart contracts using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
 
+**Note:** The pool addresses in `vestingPools.ts` are from the current local Anvil deployment. After running yarn deploy on a fresh chain, update them to match the new broadcast addresses.
+
 ## Testing
 
 ```bash
