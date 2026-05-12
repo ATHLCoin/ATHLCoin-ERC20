@@ -97,10 +97,10 @@ contract AthlVestingWallet {
      * @param _revoker  Address that can add/revoke beneficiaries (treasury multisig).
      * @param _start    Unix timestamp at which vesting begins (deploy time + cliff).
      * @param _duration Seconds over which tokens vest linearly after `_start`.
+     *                  Pass 0 for allocations that are fully claimable at `_start` (no linear vesting).
      */
     constructor(address _token, address _revoker, uint64 _start, uint64 _duration) {
         if (_token == address(0) || _revoker == address(0)) revert ZeroAddress();
-        if (_duration == 0) revert ZeroDuration();
         token = IERC20(_token);
         revoker = _revoker;
         start = _start;
@@ -190,6 +190,7 @@ contract AthlVestingWallet {
 
         uint256 total = info.allocation;
         if (total == 0 || timestamp < start) return 0;
+        if (duration == 0) return total;
         if (timestamp >= start + duration) return total;
         return total * (timestamp - start) / duration;
     }

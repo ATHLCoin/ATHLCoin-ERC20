@@ -553,7 +553,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 2,
+      deployedOnBlock: 3,
     },
     AthlVestingWallet: {
       address: "0xa15bb66138824a1c7167f5e85b957d04dd34e468",
@@ -880,9 +880,19 @@ const deployedContracts = {
           name: "ZeroAddress",
           inputs: [],
         },
+        {
+          type: "error",
+          name: "ZeroAllocation",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "ZeroDuration",
+          inputs: [],
+        },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 2,
+      deployedOnBlock: 3,
     },
   },
 } as const;

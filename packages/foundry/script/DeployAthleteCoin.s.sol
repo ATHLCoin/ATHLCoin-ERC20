@@ -58,13 +58,11 @@ contract DeployAthleteCoin is ScaffoldETHDeploy {
     // -------------------------------------------------------------------------
     // Team and Advisor beneficiaries — replace with real addresses before mainnet deployment
     // -------------------------------------------------------------------------
-    // For local testing, we use the deployer address as a placeholder beneficiary.
-    // In production, these should be replaced with the actual team member and advisor addresses.
-    // Example:
-    // address constant TEAM_BENEFICIARY = [0x123...]; // Replace with real team multisig or individual addresses
-    // address constant ADVISOR_BENEFICIARY = [0xabc...]; // Replace with real advisor multisig or individual addresses
-    address constant TEAM_BENEFICIARY = deployer; // Placeholder, set to deployer in run()
-    address constant ADVISOR_BENEFICIARY = deployer; // Placeholder, set to deployer in run()
+    // TODO (production): Replace these with real beneficiary addresses before mainnet deploy.
+    // address constant TEAM_BENEFICIARY     = 0x1234...; // team multisig or individual
+    // address constant ADVISOR_BENEFICIARY  = 0xabcd...; // advisor multisig or individual
+    //
+    // For local testing the deployer is used as a placeholder (set at runtime below).
 
     function run() external ScaffoldEthDeployerRunner {
         // 1. Deploy AthleteCoin — entire 10B supply minted to the deployer.
@@ -89,7 +87,7 @@ contract DeployAthleteCoin is ScaffoldETHDeploy {
         // TODO: Call teamVesting.addBeneficiary(memberAddress, memberAllocation)
         //       for each team member. Allocations must sum to TEAM_ALLOCATION.
         //       Example (uses deployer as placeholder for local testing):
-        teamVesting.addBeneficiary(TEAM_BENEFICIARY, TEAM_ALLOCATION);
+        teamVesting.addBeneficiary(deployer, TEAM_ALLOCATION); // TODO: replace deployer with real team beneficiary
 
         // 3. Advisors vesting wallet
         //    Nothing is claimable before (deployTime + 6 months).
@@ -106,7 +104,7 @@ contract DeployAthleteCoin is ScaffoldETHDeploy {
         // TODO: Call advisorsVesting.addBeneficiary(advisorAddress, advisorAllocation)
         //       for each advisor. Allocations must sum to ADVISORS_ALLOCATION.
         //       Example (uses deployer as placeholder for local testing):
-        advisorsVesting.addBeneficiary(ADVISOR_BENEFICIARY, ADVISORS_ALLOCATION);
+        advisorsVesting.addBeneficiary(deployer, ADVISORS_ALLOCATION); // TODO: replace deployer with real advisor beneficiary
 
         // platform
         AthlVestingWallet platformVesting = new AthlVestingWallet(
