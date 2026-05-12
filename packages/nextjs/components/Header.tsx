@@ -22,7 +22,7 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/",
   },
   {
-    label: "ERC-20",
+    label: "ATHL Token",
     href: "/erc20",
     icon: <BanknotesIcon className="h-4 w-4" />,
   },
