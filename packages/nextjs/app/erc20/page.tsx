@@ -30,33 +30,41 @@ const ERC20: NextPage = () => {
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5 text-center max-w-4xl">
-          <h1 className="text-4xl font-bold">ERC-20 Token</h1>
+          <h1 className="text-4xl font-bold">ATHL Token</h1>
           <div>
             <p>
-              This extension introduces an ERC-20 token contract and demonstrates how to use interact with it, including
-              getting a holder balance and transferring tokens.
+              AthlCoin (ATHL) is a fixed-supply ERC-20 token. 10 billion ATHL were minted once at deployment — there is
+              no additional minting or burning.
             </p>
             <p>
-              The ERC-20 Token Standard introduces a standard for Fungible Tokens (
+              The token follows the{" "}
               <a
                 target="_blank"
                 href="https://eips.ethereum.org/EIPS/eip-20"
                 className="underline font-bold text-nowrap"
               >
                 EIP-20
+              </a>{" "}
+              standard and also supports{" "}
+              <a
+                target="_blank"
+                href="https://eips.ethereum.org/EIPS/eip-2612"
+                className="underline font-bold text-nowrap"
+              >
+                EIP-2612 permit
               </a>
-              ), in other words, each Token is exactly the same (in type and value) as any other Token.
+              , enabling gasless approvals.
             </p>
             <p>
-              The ERC-20 token contract is implemented using the{" "}
+              The contract is implemented using the{" "}
               <a
                 target="_blank"
                 href="https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol"
                 className="underline font-bold text-nowrap"
               >
-                ERC-20 token implementation
+                OpenZeppelin ERC-20
               </a>{" "}
-              from OpenZeppelin.
+              library.
             </p>
           </div>
 
@@ -65,15 +73,10 @@ const ERC20: NextPage = () => {
           <h2 className="text-3xl font-bold mt-4">Interact with the token</h2>
 
           <div>
-            <p>Below you can see the total token supply (total amount of minted tokens) and your token balance.</p>
+            <p>Below you can see the total token supply and your token balance.</p>
             <p>
-              You can use the <strong>Mint 100 Tokens</strong> button to get 100 new tokens (for free! Check the
-              contract implementation)
-            </p>
-            <p>
-              You can also transfer tokens to another address. Just fill in the address and the amount of tokens you
-              want to send and click the send button. Test it by opening this page on an incognito window and sending
-              tokens to the new generated burner wallet address.
+              You can transfer tokens to another address by filling in the recipient address and amount, then clicking{" "}
+              <strong>Send</strong>.
             </p>
           </div>
         </div>
