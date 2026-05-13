@@ -34,6 +34,71 @@ Vesting is managed by `AthlVestingWallet` — a custom multi-beneficiary, revoca
 
 Beneficiaries claim their vested tokens independently by calling `release()` on their group's wallet.
 
+## Deployment flow
+
+```mermaid
+flowchart TD
+    D([Deployer]) -->|"new AthlCoin(deployer)\n10B ATHL → deployer"| AC["🪙 AthlCoin\nERC-20 · ERC-2612\n10,000,000,000 ATHL"]
+
+    AC -->|"1,600,000,000 ATHL\nsafeTransfer"| TV["AthlVestingWallet\n👥 Team\n1-yr cliff · 3-yr linear"]
+    AC -->|"600,000,000 ATHL\nsafeTransfer"| AV["AthlVestingWallet\n🤝 Advisors\n6-mo cliff · 18-mo linear"]
+    AC -->|"1,950,000,000 ATHL\nsafeTransfer"| PV["AthlVestingWallet\n🏗️ Platform\nImmediate"]
+    AC -->|"500,000,000 ATHL\nsafeTransfer"| MV["AthlVestingWallet\n📣 Marketing\nImmediate"]
+    AC -->|"400,000,000 ATHL\nsafeTransfer"| SV["AthlVestingWallet\n🌱 Seed\nImmediate"]
+    AC -->|"500,000,000 ATHL\nsafeTransfer"| PRV["AthlVestingWallet\n🔒 Private Sale\nImmediate"]
+    AC -->|"800,000,000 ATHL\nsafeTransfer"| PUV["AthlVestingWallet\n🌐 Public Sale\nImmediate"]
+    AC -->|"3,650,000,000 ATHL\nsafeTransfer"| EV["AthlVestingWallet\n🌿 Ecosystem\nImmediate"]
+
+    TV --> B1["Beneficiary\ncall release()"]
+    AV --> B2["Beneficiary\ncall release()"]
+    PV --> B3["Beneficiary\ncall release()"]
+    MV --> B3
+    SV --> B3
+    PRV --> B3
+    PUV --> B3
+    EV --> B3
+
+    D -->|"addBeneficiary(addr, amount)"| TV
+    D -->|"addBeneficiary(addr, amount)"| AV
+    D -.->|"revoke(addr) → unvested\ntokens returned"| TV
+    D -.->|"revoke(addr) → unvested\ntokens returned"| AV
+```
+
+## Vesting schedule
+
+```mermaid
+gantt
+    title ATHL Token Vesting Schedule
+    dateFormat YYYY-MM-DD
+    axisFormat %b %Y
+
+    section Team (16%)
+    Cliff (locked)           :crit, 2026-05-12, 365d
+    Linear vesting           :active, after cliff-team, 1095d
+
+    section Advisors (6%)
+    Cliff (locked)           :crit, 2026-05-12, 183d
+    Linear vesting           :active, after cliff-adv, 548d
+
+    section Platform (19.5%)
+    Immediately claimable    :done, 2026-05-12, 1d
+
+    section Marketing (5%)
+    Immediately claimable    :done, 2026-05-12, 1d
+
+    section Seed (4%)
+    Immediately claimable    :done, 2026-05-12, 1d
+
+    section Private Sale (5%)
+    Immediately claimable    :done, 2026-05-12, 1d
+
+    section Public Sale (8%)
+    Immediately claimable    :done, 2026-05-12, 1d
+
+    section Ecosystem (36.5%)
+    Immediately claimable    :done, 2026-05-12, 1d
+```
+
 ## Key files
 
 | File | Purpose |

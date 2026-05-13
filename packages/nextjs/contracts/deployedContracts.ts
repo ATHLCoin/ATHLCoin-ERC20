@@ -645,6 +645,24 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "changeBeneficiary",
+          inputs: [
+            {
+              name: "oldBeneficiary",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "newBeneficiary",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
           name: "duration",
           inputs: [],
           outputs: [
@@ -736,6 +754,19 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "totalAllocated",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "vestedAmount",
           inputs: [
             {
@@ -773,6 +804,25 @@ const deployedContracts = {
               type: "uint256",
               indexed: false,
               internalType: "uint256",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "BeneficiaryChanged",
+          inputs: [
+            {
+              name: "oldBeneficiary",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "newBeneficiary",
+              type: "address",
+              indexed: true,
+              internalType: "address",
             },
           ],
           anonymous: false,
@@ -845,6 +895,22 @@ const deployedContracts = {
         },
         {
           type: "error",
+          name: "InsufficientFunds",
+          inputs: [
+            {
+              name: "totalAllocated",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "balance",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+        },
+        {
+          type: "error",
           name: "NotABeneficiary",
           inputs: [
             {
@@ -892,7 +958,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 1,
+      deployedOnBlock: 4,
     },
   },
 } as const;

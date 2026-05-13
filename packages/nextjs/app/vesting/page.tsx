@@ -1,6 +1,8 @@
 "use client";
 
+import { AllocationPieChart } from "./_components/AllocationPieChart";
 import { VestingPoolCard } from "./_components/VestingPoolCard";
+import { VestingTimeline } from "./_components/VestingTimeline";
 import { VESTING_POOLS, VESTING_WALLET_ABI } from "./vestingPools";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
@@ -37,6 +39,12 @@ const VestingPage: NextPage = () => {
             </span>
           </div>
         )}
+      </div>
+
+      {/* ── Charts ───────────────────────────────────────────────────────── */}
+      <div className="w-full max-w-5xl mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <AllocationPieChart />
+        <VestingTimeline />
       </div>
 
       {/* ── Allocation summary ────────────────────────────────────────────── */}
