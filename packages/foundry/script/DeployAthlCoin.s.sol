@@ -110,8 +110,8 @@ contract DeployAthlCoin is ScaffoldETHDeploy {
         AthlVestingWallet platformVesting = new AthlVestingWallet(
             address(athl),
             deployer,                // revoker — replace with treasury multisig
-            deployTime,              // no cliff, start vesting immediately
-            0                        // no linear vesting, all tokens claimable at start
+            deployTime,              // no cliff, tokens claimable immediately
+            1                        // 1-second duration — fully vested from deployment
         );
         athl.safeTransfer(address(platformVesting), PLATFORM_ALLOCATION);
         console.logString(string.concat("Platform AthlVestingWallet at:", vm.toString(address(platformVesting))));
@@ -121,8 +121,8 @@ contract DeployAthlCoin is ScaffoldETHDeploy {
         AthlVestingWallet marketingVesting = new AthlVestingWallet(
             address(athl),
             deployer,                // revoker — replace with treasury multisig
-            deployTime,              // no cliff, start vesting immediately
-            0                        // no linear vesting, all tokens claimable at start
+            deployTime,              // no cliff, tokens claimable immediately
+            1                        // 1-second duration — fully vested from deployment
         );
         athl.safeTransfer(address(marketingVesting), MARKETING_ALLOCATION);
         console.logString(string.concat("Marketing AthlVestingWallet at:", vm.toString(address(marketingVesting))));
@@ -132,8 +132,8 @@ contract DeployAthlCoin is ScaffoldETHDeploy {
         AthlVestingWallet seedVesting = new AthlVestingWallet(
             address(athl),
             deployer,                // revoker — replace with treasury multisig
-            deployTime,              // no cliff, start vesting immediately
-            0                        // no linear vesting, all tokens claimable at start
+            deployTime,              // no cliff, tokens claimable immediately
+            1                        // 1-second duration — fully vested from deployment
         );
         athl.safeTransfer(address(seedVesting), SEED_ALLOCATION);
         console.logString(string.concat("Seed AthlVestingWallet at:   ", vm.toString(address(seedVesting))));
@@ -142,8 +142,8 @@ contract DeployAthlCoin is ScaffoldETHDeploy {
         AthlVestingWallet privateSaleVesting = new AthlVestingWallet(
             address(athl),
             deployer,                // revoker — replace with treasury multisig
-            deployTime,              // no cliff, start vesting immediately
-            0                        // no linear vesting, all tokens claimable at start
+            deployTime,              // no cliff, tokens claimable immediately
+            1                        // 1-second duration — fully vested from deployment
         );
         athl.safeTransfer(address(privateSaleVesting), PRIVATE_SALE_ALLOCATION);
         console.logString(string.concat("Private Sale AthlVestingWallet at:   ", vm.toString(address(privateSaleVesting))));    
@@ -152,8 +152,8 @@ contract DeployAthlCoin is ScaffoldETHDeploy {
         AthlVestingWallet publicSaleVesting = new AthlVestingWallet(
             address(athl),
             deployer,                // revoker — replace with treasury multisig
-            deployTime,              // no cliff, start vesting immediately             
-            0                        // no linear vesting, all tokens claimable at start
+            deployTime,              // no cliff, tokens claimable immediately             
+            1                        // 1-second duration — fully vested from deployment
         );
         athl.safeTransfer(address(publicSaleVesting), PUBLIC_SALE_ALLOCATION);
         console.logString(string.concat("Public Sale AthlVestingWallet at:   ", vm.toString(address(publicSaleVesting))));  
@@ -162,8 +162,8 @@ contract DeployAthlCoin is ScaffoldETHDeploy {
         AthlVestingWallet ecosystemVesting = new AthlVestingWallet(
             address(athl),
             deployer,                // revoker — replace with treasury multisig               
-            deployTime,              // no cliff, start vesting immediately         
-            0                        // no linear vesting, all tokens claimable at start
+            deployTime,              // no cliff, tokens claimable immediately         
+            1                        // 1-second duration — fully vested from deployment
         );
         athl.safeTransfer(address(ecosystemVesting), ECOSYSTEM_ALLOCATION);
         console.logString(string.concat("Ecosystem AthlVestingWallet at:   ", vm.toString(address(ecosystemVesting)))); 
